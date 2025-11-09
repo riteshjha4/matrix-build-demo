@@ -1,1 +1,40 @@
+name: Matrix Build Minimal (76cdc82)
 
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build for Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: matrix-76cdc82
+        run: echo "Running build with Python=${{ matrix.python-version }}"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Generate build artifact
+        run: |
+          OUTFILE="build_output-py${{ matrix.python-version }}.txt"
+          echo "Build for Python=${{ matrix.python-version }}" > "$OUTFILE"
+          echo "Generated at: $(date)" >> "$OUTFILE"
+          echo "Matrix ID: 76cdc82" >> "$OUTFILE"
+          cat "$OUTFILE"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-76cdc82-py${{ matrix.python-version }}
+          path: build_output-py${{ matrix.python-version }}.txt
